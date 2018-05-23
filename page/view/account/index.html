@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工管理</title>
+    <meta name="keywords" content="工蜂引流 - 自动营销">
+    <meta name="description" content="工蜂引流 - 自动营销">
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 禁止百度SiteAPP转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/page/img/favicon.ico">
+    <link href="/page/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/page/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/page/css/animate.min.css" rel="stylesheet">
+    <link href="/page/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/page/css/common.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <h2>员工管理</h2>
+                    <div class="row p-lr m-b">
+                        <div class="col-sm-3" style="padding: 0;">
+                            <div class="input-group">
+                                <input type="text" placeholder="请输入关键词" class="input-sm form-control" id="keyword">
+                                <span class="input-group-btn">
+                                <button type="button" class="btn btn-sm btn-info" onclick="search()"> 搜索</button>
+                            </span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-primary m-l"
+                                data-layer="/page/view/account/edit.html"
+                                data-layer-title="添加员工" data-layer-w="700px" data-layer-h="80%"> 新增
+                        </button>
+                        <button type="button" class="btn btn-sm btn-primary m-l"
+                                data-layer="/page/view/account/import.html"
+                                data-layer-title="批量导入员工手机号码" data-layer-w="900px" data-layer-h="80%"> 批量导入
+                        </button>
+                    </div>
+                    <div class="clients-list">
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active">
+                                <div class="full-height-scroll">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover"><thead>
+                                        <tr>
+                                            <th width="30">序</th>
+                                            <th width="50">头像</th>
+                                            <th width="100">昵称</th>
+                                            <th width="50">性别</th>
+                                            <th width="200">手机</th>
+                                        </tr>
+                                        </thead>
+                                            <tbody id="list">
+                                            <tr>
+                                                <td colspan="5" class="text-center">正在加载中..</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div id="pageDiv"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="accountList" type="text/html">
+    {{each data.Data}}
+        <tr>
+        <td>
+        {{(data.PageIndex-1)*data.PageSize+$index+1}}
+        </td>
+        <td class="client-avatar">
+        {{if $value.photo}}
+                <img alt="image" src="{{$value.photo}}">
+        {{else}}
+                <img alt="image" src="/page/img/photo.png">
+        {{/if}}
+        </td>
+        <td>{{$value.nickname?$value.nickname:"无"}}</td>
+        <td>{{$value.gender?$value.gender:"无"}}</td>
+        <td>{{$value.mobile}}</td>
+        </tr>
+    {{/each}}
+</script>
+<script src="/page/js/jquery.min.js?v=2.1.4"></script>
+<script src="/page/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="/page/js/plugins/layer/laypage.js"></script>
+<script src="/page/js/common.js"></script>
+<script src="/page/js/template-web.js"></script>
+<script src="/page/js/view/account/index.js"></script>
+</body>
+</html>

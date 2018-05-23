@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发送统计</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>发送统计</title>
+
+    <meta name="keywords" content="工蜂引流 - 自动营销">
+    <meta name="description" content="工蜂引流 - 自动营销">
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 禁止百度SiteAPP转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/page/img/favicon.ico">
+    <link href="/page/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/page/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/page/css/animate.min.css" rel="stylesheet">
+    <link href="/page/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/page/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/page/css/common.css" rel="stylesheet">
+    <script href="/page/js/js.cookie.js"></script>
+    <script href="/page/js/jump.js"></script>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="ibox-title">
+        <a href="javascript:history.back();" class="btn btn-default" type="button">
+            <i class="fa fa-angle-left"></i>
+            返回
+        </a>
+    </div>
+    <div class="white-bg m-b">
+        <div id="container" class="p-sm" style="height: 300px;margin: 0 auto;width: 60%;"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>已发送记录</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--<div class="row p-lr m-b">
+                        <div class="col-sm-6" style="padding: 0;">
+                            <div class="input-group">
+                                <input type="text" placeholder="请输入关键词" class="input-sm form-control">
+                                <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th width="50">序</th>
+                                <th width="150">账号</th>
+                                <th width="150">手机号码</th>
+                                <th width="200">发送时间</th>
+                            </tr>
+                            </thead>
+                            <tbody id="send">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="text-danger">未发送账号</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--<div class="row p-lr m-b">
+                      <div class="col-sm-6" style="padding: 0;">
+                          <div class="input-group">
+                              <input type="text" placeholder="请输入关键词" class="input-sm form-control">
+                              <span class="input-group-btn">
+                                      <button type="button" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                          </div>
+                      </div>
+                  </div>-->
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th width="50">序</th>
+                                <th width="150">账号</th>
+                                <th width="150">手机号码</th>
+                            </tr>
+                            </thead>
+                            <tbody id="noSend">
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="tplSend" type="text/html">
+{{each data}}
+<tr>
+    <td>
+    {{$index+1}}
+    </td>
+    <td>{{$value.nickname}}</td>
+    <td>{{$value.mobile}}</td>
+    <td>{{$value.check_time}}</td>
+</tr>
+{{/each}}
+</script>
+<script id="tplNoSend" type="text/html">
+{{each data}}
+<tr>
+<td>
+{{$index+1}}
+</td>
+<td>{{$value.nickname}}</td>
+<td>{{$value.mobile}}</td>
+<td>{{$value.check_time}}</td>
+</tr>
+{{/each}}
+</script>
+<script src="/page/js/jquery.min.js?v=2.1.4"></script>
+<script src="/page/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script src="/page/js/common.js"></script>
+<script src="/page/js/template-web.js"></script>
+
+<script>
+$(function () {
+    var id = GetQueryString("id");
+    $.ajax({
+        url: '/api/advert/check/log',
+        data: {id: id},
+        success: function (d) {
+            var send=new Array();
+            var noSend=new Array();
+            $.each(d.data,function(i,item) {
+                if(item.check_time==null){
+                    noSend.push(item)
+                }else{
+                    send.push(item)
+                }
+            });
+            $('#send').html(template('tplSend', {data:send}));
+            $('#noSend').html(template('tplNoSend',  {data:noSend}));
+            showGroupEcharts(send.length,noSend.length);
+        }
+    })
+});
+
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {}, option = null;
+    app.title = '广告已发送和未发送人统计';
+
+    function showGroupEcharts(send,noSend) {
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        color: ['#c7c7c7', '#33c28c'],
+        series: [
+            {
+                name: '结果',
+                type: 'pie',
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '20'
+                        }
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [
+                    {value: noSend, name: noSend+'人未发送'},
+                    {value: send, name: send+'人已发送'}
+                ]
+            }
+        ]
+    };
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>正在跳转..</title>
+    <meta name="keywords" content="工蜂引流 - 自动营销">
+    <meta name="description" content="工蜂引流 - 自动营销">
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 禁止百度SiteAPP转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/page/img/favicon.ico">
+    <script src="/page/js/js.cookie.js"></script>
+    <script>
+        //获取url中的参数
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+        var token = GetQueryString("token");
+        if (token) {
+            Cookies.set("token", token, {expires: 1});
+            location.href = location.origin;
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

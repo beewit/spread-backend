@@ -1,0 +1,182 @@
+button, input, optgroup, select, textarea {
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    outline: none !important;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right
+}
+
+.p-l {
+    padding-left: 15px;
+}
+
+.p-r {
+    padding-right: 15px;
+}
+
+.p-lr {
+    padding: 0 15px;
+}
+
+.p-tm {
+    padding: 15px 0;
+}
+
+.table {
+    table-layout: fixed;
+}
+
+.table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.previewImg img {
+    width: 30px;
+    height: 30px;
+    margin: 3px 0;
+}
+
+.form {
+    padding-bottom: 50px;
+}
+
+.form .form-group {
+    display: block;
+    overflow: hidden;
+}
+
+.form .form-group .control-label {
+    text-align: right;
+    line-height: 34px;
+}
+
+.control-label span {
+    color: #f1464f;
+    margin-right: 3px;
+}
+
+.form_err, .form_err:focus {
+    border: 1px solid #f1464f !important;
+}
+
+.vail_err {
+    color: #f1464f !important;
+}
+.i-checks .vail_err{
+    width: 100px;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 22px;
+}
+.nav > li > a.active {
+    background-color: #293846;
+    color: #fff;
+}
+
+.dlImg dd {
+    display: inline-table;
+    margin-right: 5px;
+    margin-top: 5px;
+    width: 80px;
+    height: 80px;
+    position: relative;
+}
+.dlImg dd i:before{
+    font: normal normal normal 14px/1 FontAwesome;
+    text-align: center;
+    content: "\f00d";
+    width: 20px;
+    height: 20px;
+    display: block;
+    line-height: 20px;
+}
+.dlImg dd i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #f74b4b;
+    color: #fff;
+    cursor: pointer;
+}
+
+.dlImg dd img {
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 500px) {
+    .form .col-sm-1, .form .col-sm-10, .form .col-sm-11, .form .col-sm-12, .form .col-sm-2, .form .col-sm-3,
+    .form .col-sm-4, .form .col-sm-5, .form .col-sm-6, .form .col-sm-7, .form .col-sm-8, .form .col-sm-9 {
+        float: left;
+    }
+
+    .form .col-sm-12 {
+        width: 100%
+    }
+
+    .form .col-sm-11 {
+        width: 91.66666667%
+    }
+
+    .form .col-sm-10 {
+        width: 83.33333333%
+    }
+
+    .form .col-sm-9 {
+        width: 75%
+    }
+
+    .form .col-sm-8 {
+        width: 66.66666667%
+    }
+
+    .form .col-sm-7 {
+        width: 58.33333333%
+    }
+
+    .form .col-sm-6 {
+        width: 50%
+    }
+
+    .form .col-sm-5 {
+        width: 41.66666667%
+    }
+
+    .form .col-sm-4 {
+        width: 33.33333333%
+    }
+
+    .form .col-sm-3 {
+        width: 25%
+    }
+
+    .form .col-sm-2 {
+        width: 16.66666667%
+    }
+
+    .form .col-sm-1 {
+        width: 8.33333333%
+    }
+}
+
+.editFormTool {
+    display: block;
+    width: 100%;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    border-top: #efefef solid 1px;
+    background: #f7f7f7;;
+}

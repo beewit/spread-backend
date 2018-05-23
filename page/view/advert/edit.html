@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加广告</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>工蜂引流 - 主页</title>
+
+    <meta name="keywords" content="工蜂引流 - 自动营销">
+    <meta name="description" content="工蜂引流 - 自动营销">
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 禁止百度SiteAPP转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/page/img/favicon.ico">
+    <link href="/page/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/page/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/page/css/animate.min.css" rel="stylesheet">
+    <link href="/page/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/page/js/plugins/viewer/viewer.min.css" rel="stylesheet">
+    <link href="/page/css/common.css" rel="stylesheet">
+</head>
+<body>
+<div class="col-md-12">
+    <form id="editForm" class="form editForm p-sm">
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span>*</span>标题：</label>
+            <div class="col-sm-9">
+                <input type="text" name="title" class="form-control" placeholder="请输入标题">
+                <span class="help-block m-b-none">主要用于识别区分广告</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span>*</span>广告内容：</label>
+            <div class="col-sm-9">
+                <textarea type="text" name="content" class="form-control" placeholder="请输入广告内容"></textarea>
+                <span class="help-block m-b-none">发送朋友圈的文字内容</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">上传图片：</label>
+            <div class="col-sm-9">
+                <input type="hidden" name="img">
+                <p id="container">
+                    <button type="button" class="btn btn-sm btn-warning" id="pickfiles">
+                        <i class="fa fa-upload"></i> 上传
+                    </button>
+                </p>
+                <span class="help-block m-b-none">最多上传9张</span>
+                <dl id="dlImg" class="dlImg">
+
+                </dl>
+            </div>
+        </div>
+        <div class="editFormTool">
+            <button type="button" class="btn btn-default m-l" onclick="closeIframe()">取消</button>
+            <button type="submit" class="btn btn-primary m-l">保存</button>
+        </div>
+    </form>
+</div>
+
+<script src="/page/js/jquery.min.js?v=2.1.4"></script>
+<script src="/page/js/plugins/viewer/viewer.min.js"></script>
+<script src="/page/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/page/js/plugins/jquery-validation/messages_zh.min.js"></script>
+<script src="/page/js/plugins/jquery-validation/jquery.form.min.js"></script>
+<script src="/page/js/plugins/jquery-validation/common.validation.js"></script>
+<script src="/page/js/plugins/plupload/plupload.full.min.js"></script>
+<script src="/page/js/plugins/plupload/i18n/zh_CN.js"></script>
+<script src="/page/js/common.js"></script>
+<script src="/page/js/common.ajax.js"></script>
+<script src="/page/js/plugins/plupload/uploadfile.js"></script>
+<script src="/page/js/view/advert/edit.js"></script>
+</body>
+</html>

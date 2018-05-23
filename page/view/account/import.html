@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量导入员工</title>
+    <meta name="keywords" content="工蜂引流 - 自动营销">
+    <meta name="description" content="工蜂引流 - 自动营销">
+
+    <!-- 360浏览器默认使用Webkit内核 -->
+    <meta name="renderer" content="webkit">
+    <!-- 禁止百度SiteAPP转码 -->
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="/page/img/favicon.ico">
+    <link href="/page/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="/page/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="/page/css/animate.min.css" rel="stylesheet">
+    <link href="/page/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="/page/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/page/css/common.css" rel="stylesheet">
+    <style>
+        .paste-input {
+            padding-top: 3px !important;
+            padding-bottom: 3px !important;
+            font-size: 12px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="form-group">
+    <div class="col-sm-12">
+        <form id="editForm" class="form editForm p-sm">
+            <div style="overflow: hidden">
+                    <textarea class="form-control" placeholder="在此处粘贴Excel复制姓名、手机号码、性别" id="textArea"
+                              style="width:50%;float:left;"></textarea>
+                <div style="text-align:center;float:right">
+                    <button type="reset" class="btn btn-warning am-margin-right-lg">重置</button>
+                    <button type="button" class="btn btn-primary am-margin-right-lg" style="color:#fff;"
+                            id="validateBtn">校验导入
+                    </button>
+                    <button type="button" class="btn btn-success" id="pasteBtn">确定导入</button>
+                </div>
+            </div>
+            <div class="clear m-t text-danger">默认登录密码：666666</div>
+            <div class="m-t">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr id="head"></tr>
+                        </thead>
+                        <tbody id="body">
+                        <tr class="am-active"></tr>
+                        </tbody>
+                    </table>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/page/js/jquery.min.js?v=2.1.4"></script>
+<script src="/page/js/common.js"></script>
+<script src="/page/js/view/account/import.js"></script>
+</body>
+</html>
