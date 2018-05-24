@@ -356,21 +356,18 @@ var Bind = {
 };
 
 function jump() {
-    if (location.origin.indexOf("localhost")) {
-        parent.location.href = "http://127.0.0.1:8081/?backUrl=" + location.origin + "/page/jump.html";
+    if (location.origin.indexOf("localhost") > -1 || location.origin.indexOf("127.0.0.1") > -1) {
+        location.href = "http://127.0.0.1:8081/?backUrl=" + location.origin + "/page/jump.html";
     } else {
-        parent.location.href = "http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";
+        location.href = "http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";
     }
 }
 
 /*!
  * jquery.ajax 重新封装，功能：1、统一提示，2、错误处理
- * 调用方式不变，只需要引入该js文件
  */
 (function ($) {
-    //备份jquery的ajax方法
     var _ajax = $.ajax;
-    //重写jquery的ajax方法
     $.ajax = function (options) {
         var defaults = {
             loadTip: true,
@@ -382,7 +379,6 @@ function jump() {
             token: token,
         };
         var opt = $.extend(defaults, options);
-        //备份opt中error和success方法
         var fn = {
             error: function (XMLHttpRequest, textStatus, errorThrown) {
             },
@@ -399,7 +395,6 @@ function jump() {
             fn.success = opt.success;
         }
         var loadi;
-        //扩展增强处理
         var _opt = $.extend(opt, {
             headers: {'Authorization': "Bearer " + opt.token},
             beforeSend: function (XMLHttpRequest) {
@@ -418,19 +413,17 @@ function jump() {
                         icon: 2
                     });
                 }
-                //错误方法增强处理
                 fn.error(XMLHttpRequest, textStatus, errorThrown);
             },
             success: function (data, textStatus) {
                 layerMsg.close(loadi);
                 if (opt.errTip) {
-                    //json转换对象
                     var json = data;
                     if (json.ret !== 200 && json.ret !== 404) {
                         if (json.ret === 401) {
-                            BaseCookies.remove("token");
+                            //BaseCookies.remove("token");
                             layerMsg.msg(json.msg, {icon: 0, time: 1500}, function () {
-                                jump();
+                                //jump();
                             });
                         } else {
                             layerMsg.alert(json.msg, {
@@ -448,108 +441,6 @@ function jump() {
     };
 
     var $table;
-    $.fn.bindTable = function (options) {
-        var defaults = {
-            jsonData: {},  //传入的jsondata.list数据
-            page: 1,
-            pageSize: 0,
-            handle: function (index, e) {
-            } //用来处理一些变色的操作等。/index:当前tr的索引。 e:当前tr的元素
-
-        };
-        var opts = $.extend(defaults, options);
-        $table = this;
-        var data = opts.jsonData.data.list;//$.parseJSON(opts.jsonData);
-        var trhtml = "";
-        var val;
-        if (data == null || data == undefined || data.length == 0) {
-            trhtml = "<tr><td colspan='" + $table.find("thead tr th").size() + "' align='center' style='text-align: center;'>暂无数据</td></tr>";
-            $table.find("tbody").html(trhtml);
-        } else {
-            for (var i = 0; i < data.length; i++) {
-                eval("pk=data[i]." + ($table.attr("data-pk") || "id"));
-                trhtml += "<tr id='" + (pk == undefined ? "" : pk) + "' class='" + (i % 2 ? "tr_bg" : "") + "'>";
-                $table.find("thead tr th").each(function () {
-                    if ($(this).attr("data-order") == "1") {
-                        trhtml += "<td>" + ((opts.page - 1) * opts.pageSize + (i + 1)) + "</td>";
-                    } else {
-                        eval("val=data[i]." + $(this).attr("name"));
-                        if (val == undefined || val == null || $(this).attr("name") == undefined) {
-                            val = "";
-                        }
-                        var align = $(this).attr("align") || "";
-                        var handle = $(this).attr("data-handle") || false;
-                        var style = $(this).attr("data-style") || "";
-                        if (style != "") {
-                            style = " style='" + style + "'";
-                        }
-                        var cls = $(this).attr("data-class") || "";
-                        if (cls != "") {
-                            cls = " class='" + cls + "'";
-                        }
-                        var dataType = $(this).attr("data-type") || "";
-                        var housingType = $(this).attr("data-housingType") || "";
-                        var radio = $(this).find("input[type=radio]").length > 0;
-                        var chkbox = $(this).find("input[type=checkbox]").length > 0;
-                        if (chkbox) {
-                            $(this).find("input[type=checkbox]").addClass("chkboxall");
-                            trhtml += "<td " + style + cls + ">  <input type='checkbox' class='i-checks chkbox' value='" + pk + "' ></td>";
-                        }
-                        else if (radio) {
-                            $(this).find("input[type=radio]").addClass("hide");
-                            $(this).addClass("chkradioall");
-                            trhtml += "<td " + style + cls + ">  <input type='radio' name='radio_1' class='i-checks chkradio' value='" + pk + "' ></td>";
-                        }
-                        else if (handle) {
-                            var handleStr = $(this).find(".hidden").html();
-                            if (handleStr != undefined && handleStr != "") {
-                                for (var item in data[i]) {
-                                    eval("var re = /{" + item + "}/g;");
-                                    handleStr = handleStr.replace(re, data[i][item]);
-                                }
-                            } else {
-                                eval("var handleStr =" + handle + "(data[i]);");
-                            }
-                            trhtml += "<td " + style + cls + ">" + handleStr + "</td>";
-                        } else if (dataType != "") {
-                            if (dataType == "datetime") {
-                                trhtml += "<td " + style + cls + "  name= " + val + " >" + formatDateTime(val) + "</td>";
-                            }
-                            else if (dataType == "date-m") {
-                                trhtml += "<td " + style + cls + "  name= " + val + " >" + formatDateMonth(val) + "</td>";
-                            }
-                            else if (dataType == "img") {
-                                trhtml += "<td " + style + cls + "  name= " + val + " ><img src='" + (val == "" || val == null || val == 'null' || val == undefined ? "/static/image/default.png" : val) + "'></td>";
-                            }
-                            else if (dataType == "date") {
-                                trhtml += "<td  " + style + cls + " name= " + val + " >" + formatDate(val) + "</td>";
-                            } else if (dataType == "datetime_") {
-                                trhtml += "<td  " + style + cls + " name= " + val + " >" + formatDateTime_(val) + "</td>";
-                            }
-
-                        } else if (housingType != '') {
-                            eval("type=" + housingType + "(data[i])");
-                            trhtml += "<td " + style + cls + "  name= " + val + " >" + type + "</td>";
-                        }
-                        else {
-                            trhtml += "<td  " + style + cls + " name= " + val + " >" + val + "</td>";
-                        }
-                    }
-                });
-                trhtml += "</tr>";
-            }
-            $table.find("tbody").html(trhtml);
-            //处理选中状态
-            $table.find("tbody tr").click(function () {
-                $(this).parent().find("tr").removeClass("hover");
-                $(this).addClass("hover");
-            });
-            //绑定tr的处理事件，用于前台处理颜色
-            $table.find("tbody tr").each(function (index, element) {
-                opts.handle(index, $(this));
-            });
-        }
-    };
 
     //将json串绑定入该元素其下name属性控件
     $.fn.bindView = function (options) {
@@ -667,140 +558,5 @@ function jump() {
     $.fn.dataHandle = function (handle, val, obj, data) {
         if (handle != null && handle != undefined && handle != "")
             eval(handle + "(val,obj,data)");
-    };
-
-    $.fn.bindTemplate = function (options) {
-        var defaults = {
-            template: null,
-            jsonData: {},
-            page: 1,
-            pageSize: 0,
-            handle: function (index, e) {
-            }
-        };
-        var opts = $.extend(defaults, options);
-        $table = this;
-        var data = opts.jsonData.data.list;//$.parseJSON(opts.jsonData);
-        var tempHtml = "";
-        var val;
-        if (data == null || data == undefined || data.length == 0) {
-            tempHtml = "<div>暂无数据</div>";
-            $table.html(tempHtml);
-        }
-        else if (opts.template == null) {
-            tempHtml = "<div>模板错误</div>";
-            $table.html(tempHtml);
-        }
-        else {
-            for (var i = 0; i < data.length; i++) {
-                var handleStr = opts.template;
-                for (var item in data[i]) {
-                    eval("var re = /{" + item + "}/g;");
-                    var val = data[i][item];
-                    if (val == undefined || val == null) {
-                        val = "";
-                    }
-                    handleStr = handleStr.replace(re, val);
-                }
-                var templateHandleArr = [];
-                var templateHandle = $(this).attr("data-template-handle");
-                if (templateHandle == null || templateHandle == '' || templateHandle == undefined) {
-                    templateHandle = "";
-                } else {
-                    templateHandle.indexOf(",") == -1 ? templateHandleArr.push(templateHandle) : templateHandleArr = templateHandle.split(",");
-                }
-                if (templateHandleArr != "" && templateHandleArr.length > 0) {
-                    for (var j = 0; j < templateHandleArr.length; j++) {
-                        var rehandle = templateHandleArr[j].split("#")[1];
-                        var key = templateHandleArr[j].split("#")[0];
-                        for (var item in data[i]) {
-                            eval("var re = /{" + templateHandleArr[j] + "}/g;");
-                            var val = data[i][key];
-                            if (val == undefined || val == null) {
-                                val = "";
-                            }
-                            switch (rehandle) {
-                                case "data":
-                                    handleStr = handleStr.replace(re, formatDate(val));
-                                    break;
-                                case "dataTime":
-                                    handleStr = handleStr.replace(re, formatDateTime(val));
-                                    break;
-                                case "dataTime_":
-                                    handleStr = handleStr.replace(re, formatDateTime_(val));
-                                    break;
-                                case "dataHourMin":
-                                    handleStr = handleStr.replace(re, dataHourMin(val));
-                                    break;
-                                default:
-                                    handleStr = handleStr.replace(re, eval("" + rehandle + "(data[i])"));
-                            }
-                            handleStr = handleStr.replace(re, val);
-                        }
-
-                    }
-                }
-                tempHtml += handleStr;
-            }
-
-
-        }
-        $table.html(tempHtml);
-        $.each($table.find("[data-src]"), function (i, item) {
-            var src = $(item).attr("data-src");
-            $(item).attr("src", (src == "" || src == undefined || src == "" || src == 'null' ? "/static/image/default.png" : src))
-        })
-    };
-
-    //返回改元素下name不为空的 url查询串
-    $.fn.getParams = function () {
-        $table = this;
-
-
-        var jsonstr = "";
-        $table.find("input[name!='']").each(function () {
-            var v = $(this).val();
-            if (v == undefined || v == "") {
-                v = "";
-            }
-            if ($(this).attr("name") != null) {
-                jsonstr += "" + $(this).attr("name") + "=" + v + "&";
-            }
-        });
-
-        $table.find("select[name!='']").each(function () {
-            var v = $(this).val();
-            if (v == undefined || v == "") {
-                v = "";
-            }
-            jsonstr += "" + $(this).attr("name") + "=" + v + "&";
-        });
-        jsonstr += "abc=1";
-        jsonstr = jsonstr.replace("&abc=1", "");
-        return jsonstr;
-    };
-    //返回该元素下name不为空的json串
-    $.fn.getJson = function () {
-        $table = this;
-        var jsonStr = "{";
-        $table.find("input[name!='']").each(function () {
-            var v = $(this).val();
-            if (v == undefined || v == "") {
-                v = "''";
-            }
-            if ($(this).attr("name") != null) {
-                jsonStr += "'" + $(this).attr("name") + "':'" + v + "',";
-            }
-        });
-        $table.find("select[name!='']").each(function () {
-            var v = $(this).val();
-            if (v == undefined || v == "") {
-                v = "''";
-            }
-            jsonStr += "'" + $(this).attr("name") + "':'" + v + "',";
-        });
-        jsonStr += "abc:1}";
-        jsonStr = jsonStr.replace(",abc:1", "");
-        return jsonStr;
     };
 })(jQuery);

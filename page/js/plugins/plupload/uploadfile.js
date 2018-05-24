@@ -51,7 +51,7 @@
         opts.chunk_size = null;
     }
     args["max_file_size"] = opts.maxFileSize;
-    args["url"] = opts.url + "?dir=" + opts.dir + "&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.V5N2Dp1ZyJYQnHf4p0PdTMKdl5ED1_WMXYIefqyCjQs";// + BaseCookies.get("token");
+    args["url"] = opts.url + "?dir=" + opts.dir + "&token=" + BaseCookies.get("token");
     args["resize"] = {"width": opts.maxWidth, "height": opts.maxHeight, "quality": opts.Quality, "crop": opts.crop}
     args["runtimes"] = opts.runtimes;
     args["multi_selection"] = opts.multi;

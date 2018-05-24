@@ -4,7 +4,7 @@ fis.match('*.{js,css,jpg,gif,png}', {
 });
 
 // 加 md5
-fis.match('red_packet/js/layer/**', {
+fis.match('page/js/plugins/**', {
     useHash: false
 });
 

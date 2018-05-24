@@ -7,7 +7,7 @@ if (!token) {
         if (win.frameElement && win.frameElement.tagName == "IFRAME") {
             win = win.parent;
         } else {
-            if (location.origin.indexOf("localhost")) {
+            if (location.origin.indexOf("localhost") > -1 || location.origin.indexOf("127.0.0.1") > -1) {
                 location.href = "http://127.0.0.1:8081/?backUrl=" + location.origin + "/page/jump.html";
             } else {
                 location.href = "http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";

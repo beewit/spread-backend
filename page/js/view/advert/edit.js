@@ -11,14 +11,17 @@ $(function () {
                 if (!isEmpty(d.img)) {
                     var imgs = d.img.split(',');
                     for (var i = 0; i < imgs.length; i++) {
-                        $('#dlImg').append("<dd><i></i><img src='/file/" + imgs[i] + "'></dd>");
+                        $('#dlImg').append("<dd><i></i><img src='" + imgs[i] + "'></dd>");
+                    }
+                    if (imgs.length >= 9) {
+                        $("#pickfiles").attr("disabled", "disabled");
                     }
                 }
             }
         })
     }
     $('#dlImg').on('click', 'dd i', function () {
-        var thatImg = $(this).parent().find('img').attr('src').replace('/file/', '');
+        var thatImg = $(this).parent().find('img').attr('src');
         var img = $('input[name=img]').val();
         if (!isEmpty(img)) {
             var imgs = img.split(',');
@@ -31,6 +34,10 @@ $(function () {
             $('input[name=img]').val(imgArr.join(','))
         }
         $(this).parent().remove();
+
+        if ($('input[name=img]').val().split(',').length < 9) {
+            $("#pickfiles").removeAttrs("disabled");
+        }
     });
     new Viewer(document.getElementById('dlImg'), {
         url: 'data-original'
@@ -77,5 +84,9 @@ function callback(json, file) {
         img = src;
     }
     $('input[name=img]').val(img);
-    $('#dlImg').append("<dd><i></i><img src='/file/" + src + "'></dd>");
+    $('#dlImg').append("<dd><i></i><img src='" + src + "'></dd>");
+    //超过九个图片就隐藏上传按钮
+    if (img.split(',').length >= 9) {
+        $("#pickfiles").attr("disabled", "disabled");
+    }
 }

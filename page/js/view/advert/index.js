@@ -34,7 +34,7 @@ function loadData(pageIndex, keyword) {
                         imgArr.push(item.img);
                         var str = item.img.split(',');
                         for (var i = 0; i < str.length; i++) {
-                            imgs += "<img src='http://file.9ee3.com/" + str[i] + "' data-original='http://file.9ee3.com/" + str[i] + "'> ";
+                            imgs += "<img src='" + str[i] + "' data-original='" + str[i] + "'> ";
                         }
                     }
                     order++;
