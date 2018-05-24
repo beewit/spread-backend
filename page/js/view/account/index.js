@@ -1,5 +1,5 @@
 $(function () {
-    loadData(1,null)
+    loadData(1, null)
 });
 
 function search() {
@@ -8,7 +8,7 @@ function search() {
 }
 
 function loadData(pageIndex, keyword) {
-    window.history.pushState(null, null, "index.html?pageIndex=" + pageIndex + "&keyword=" + (keyword || ""));
+    window.history.pushState(null, null, UrlChangeParam(UrlChangeParam(location.href, "pageIndex", pageIndex || 1), "keyword", (keyword || "")));
     page = pageIndex;
     $.ajax({
         url: "/api/account/list/org",
@@ -17,7 +17,7 @@ function loadData(pageIndex, keyword) {
             var d = res.data;
             var list = res.data.Data;
             if (list != null && list.length > 0) {
-                $('#list').html(template('accountList',{data:res.data}));
+                $('#list').html(template('accountList', {data: res.data}));
             } else {
                 $("#list").html('<tr><td colspan="5" class="text-center">暂无数据</td></tr>');
             }

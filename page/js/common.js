@@ -56,6 +56,24 @@ $(function () {
     });
 });
 
+function UrlChangeParam(url, name, value) {
+    var newUrl = "";
+    var reg = new RegExp("(^|)" + name + "=([^&]*)(|$)");
+    var tmp = name + "=" + value;
+    if (url.match(reg) != null) {
+        newUrl = url.replace(eval(reg), tmp);
+    }
+    else {
+        if (url.match("[\?]")) {
+            newUrl = url + "&" + tmp;
+        }
+        else {
+            newUrl = url + "?" + tmp;
+        }
+    }
+    return newUrl;
+}
+
 //关闭弹出
 function closeIframe() {
     var index = layerMsg.getFrameIndex(window.name);
@@ -158,20 +176,26 @@ function openWin($obj, win_name) {
     if (!flog) {
         return;
     }
-    var pkid = $("#pkid").val();
+    var pkId = $("#pkId").val();
     var href = $obj.attr("data-layer");
+    var v = Date.parse(new Date());
+    if (href.indexOf("?") > -1) {
+        href += "&v=" + v;
+    } else {
+        href += "?v=" + v;
+    }
     if (win_name != undefined) {
         if (href.indexOf("?") > -1) {
-            href = href + "&winname=" + win_name;
+            href += "&winname=" + win_name;
         } else {
-            href = href + "?winname=" + win_name;
+            href += "?winname=" + win_name;
         }
     }
-    if (pkid != undefined && pkid != null && pkid != "" && href.indexOf("&id=") < 0 && href.indexOf("?id=") < 0) {
+    if (pkId != undefined && pkId != null && pkId != "" && href.indexOf("&id=") < 0 && href.indexOf("?id=") < 0) {
         if (href.indexOf("?") > -1) {
-            href = href + "&id=" + pkid;
+            href += "&id=" + pkId;
         } else {
-            href = href + "?id=" + pkid;
+            href += "?id=" + pkId;
         }
     }
     var title = $obj.attr("data-layer-title");
@@ -235,8 +259,8 @@ function exit() {
             icon: 0
         },
         function () {
-            BaseCookies.remove("token")
-            location.href = "http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";
+            BaseCookies.remove("token");
+            jump();
         }, function () {
         });
 }
@@ -331,6 +355,14 @@ var Bind = {
     }
 };
 
+function jump() {
+    if (location.origin.indexOf("localhost")) {
+        parent.location.href = "http://127.0.0.1:8081/?backUrl=" + location.origin + "/page/jump.html";
+    } else {
+        parent.location.href = "http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";
+    }
+}
+
 /*!
  * jquery.ajax 重新封装，功能：1、统一提示，2、错误处理
  * 调用方式不变，只需要引入该js文件
@@ -398,7 +430,7 @@ var Bind = {
                         if (json.ret === 401) {
                             BaseCookies.remove("token");
                             layerMsg.msg(json.msg, {icon: 0, time: 1500}, function () {
-                                location.href = "http://127.0.0.1:8081/?backUrl=" + location.origin + "/page/jump.html";//"http://sso.9ee3.com?backUrl=" + location.origin + "/page/jump.html";
+                                jump();
                             });
                         } else {
                             layerMsg.alert(json.msg, {

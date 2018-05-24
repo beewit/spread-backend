@@ -19,7 +19,8 @@ $(function () {
         postForm: {
             postUrl: "/api/account/add",
             callbackFunc: function (data) {
-                alert(JSON.stringify(data));
+                ExecuteIframeMethod("loadData", 1, '');
+                closeIframe();
             }
         }
     });

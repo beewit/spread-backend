@@ -10,6 +10,8 @@ import (
 	"time"
 	"fmt"
 	"math/rand"
+	"github.com/beewit/beekit/utils/convert"
+	"github.com/beewit/beekit/mysql"
 )
 
 /**
@@ -61,6 +63,108 @@ func GetAccountListByOrg(c echo.Context) error {
 		return utils.NullData(c)
 	}
 	return utils.Success(c, "获取数据成功", page)
+}
+
+func PasteImportAccount(c echo.Context) error {
+	org, err := GetOrg(c)
+	if err != nil {
+		return err
+	}
+	//是否为校验数
+	debug := convert.MustBool(c.FormValue("debug"))
+	//json数据
+	json := c.FormValue("json")
+	if json == "" {
+		return utils.ErrorNull(c, "无可导入数据")
+	}
+	dataMap, err := convert.String2MapList(json)
+	if err != nil {
+		return utils.ErrorNull(c, "数据格式错误")
+	}
+	if dataMap == nil {
+		return utils.ErrorNull(c, "未识别有效数据")
+	}
+	var mobiles = make([]string, len(dataMap))
+	var mobile, nickname, gender string
+	for key, value := range dataMap {
+		nickname = convert.ToString(value["nickname"])
+		mobile = convert.ToString(value["mobile"])
+		gender = convert.ToString(value["gender"])
+		if nickname != "" && len(nickname) > 50 {
+			return utils.ErrorNull(c, "姓名过长")
+		}
+		if nickname != "" && gender != enum.GENDER_MALE && gender != enum.GENDER_FEMALE {
+			return utils.ErrorNull(c, "性别仅支持男、女")
+		}
+		if mobile != "" && utils.CheckMobile(mobile) {
+			mobiles[key] = mobile
+		} else {
+			//手机格式错误
+			return utils.Success(c, "手机格式错误", map[string]interface{}{
+				"data":  "mobile",
+				"order": key,
+			})
+		}
+	}
+	//查询存在的手机号码
+	existMobileMap, err := global.DB.Query(fmt.Sprintf("SELECT mobile FROM account WHERE mobile IN (%s)", strings.Join(mobiles, ",")))
+	if err != nil {
+		return utils.ErrorNull(c, "查询手机号码重复性失败")
+	}
+
+	var msg string
+	if existMobileMap != nil {
+		mobiles = make([]string, len(existMobileMap))
+		for key, value := range existMobileMap {
+			mobile = convert.ToString(value["mobile"])
+			mobiles[key] = mobile
+		}
+		msg = "，手机号码：" + strings.Join(mobiles, ",") + "，已存在将不会修改原有的名称、性别！"
+	} else {
+		mobiles = nil
+	}
+	if debug {
+		return utils.SuccessNull(c, "检验通过！"+msg)
+	} else {
+		//添加数据
+		//进行注册
+		sql := "INSERT INTO account (id,mobile,password,salt,status,ct_time,ct_ip,nickname,gender,org_id,source_channel) VALUES (?,?,?,?,?,?,?,?,?,?,?)"
+		var accId int64
+		var salt string
+		var flag = true
+		global.DB.Tx(func(tx *mysql.SqlConnTransaction) {
+			for _, value := range dataMap {
+				mobile = convert.ToString(value["mobile"])
+				nickname = convert.ToString(value["nickname"])
+				if utils.Contains(mobiles, mobile) {
+					continue
+				}
+				accId = utils.ID()
+				salt = GetRand()
+				_, err = tx.Insert(sql, accId, mobile, encrypt.Sha1Encode("666666"+salt), salt, enum.NORMAL, utils.CurrentTime(), c.RealIP(), nickname, gender, org.ID, "org")
+				if err != nil {
+					panic(err)
+				}
+			}
+			//将已存在的手机号码，修改所属组织
+			if mobiles != nil {
+				_, err := tx.Update(fmt.Sprintf("UPDATE account SET org_id=? WHERE mobile IN (%s)", strings.Join(mobiles, ",")), org.ID)
+				if err != nil {
+					panic(err)
+				}
+			}
+		}, func(err error) {
+			if err != nil {
+				global.Log.Error("PasteImportAccount sql error：%s", err.Error())
+				flag = false
+			}
+		})
+
+		if flag {
+			return utils.SuccessNull(c, "导入完成")
+		}
+		return utils.ErrorNull(c, "导入失败")
+	}
 }
 
 func AddAccount(c echo.Context) error {

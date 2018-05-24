@@ -20,6 +20,7 @@ func Start() {
 	e.POST("/api/sys/check/role", handler.CheckRole, handler.Filter)
 	e.POST("/api/account/list/org", handler.GetAccountListByOrg, handler.Filter)
 	e.POST("/api/account/add", handler.AddAccount, handler.Filter)
+	e.POST("/api/account/paste/import", handler.PasteImportAccount, handler.Filter)
 	e.POST("/api/advert/list", handler.GetAccountAdvertList, handler.Filter)
 	e.POST("/api/advert/del", handler.DelAccountAdvert, handler.Filter)
 	e.POST("/api/advert/get", handler.GetAccountAdvert, handler.Filter)
