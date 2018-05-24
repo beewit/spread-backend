@@ -421,9 +421,9 @@ function jump() {
                     var json = data;
                     if (json.ret !== 200 && json.ret !== 404) {
                         if (json.ret === 401) {
-                            //BaseCookies.remove("token");
+                            BaseCookies.remove("token");
                             layerMsg.msg(json.msg, {icon: 0, time: 1500}, function () {
-                                //jump();
+                                jump();
                             });
                         } else {
                             layerMsg.alert(json.msg, {
