@@ -212,15 +212,27 @@ func AddAccount(c echo.Context) error {
 	if !CheckMobile(mobile) {
 		return utils.ErrorNull(c, "手机号码已存在")
 	}
-	accountId := utils.ID()
-	smsCode := GetRand()
-	sql := "INSERT INTO account (id,mobile,password,salt,status,ct_time,ct_ip,nickname,photo,gender,org_id,date_of_birth,email,remark,source_channel) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-	_, err = global.DB.Insert(sql, accountId, mobile, encrypt.Sha1Encode(password+smsCode), smsCode, enum.NORMAL,
-		utils.CurrentTime(), c.RealIP(), nickname, photo, gender, org.ID, dateOfBirth, email, remark, "org")
-	if err != nil {
-		global.Log.Error("AddAccount sql error：%s", err.Error())
-		return utils.Error(c, "保存失败，"+err.Error(), nil)
+
+	if CheckMobile(mobile) {
+		//修改信息
+		_, err := global.DB.Update("UPDATE account SET org_id=? WHERE mobile=?", org.ID, mobile)
+		if err != nil {
+			global.Log.Error("AddAccount update sql error：%s", err.Error())
+			return utils.Error(c, "保存失败，"+err.Error(), nil)
+		}
+		return utils.SuccessNull(c, "加入组织成功，但因账号已存在无法修改其他信息")
+	} else {
+		accountId := utils.ID()
+		smsCode := GetRand()
+		sql := "INSERT INTO account (id,mobile,password,salt,status,ct_time,ct_ip,nickname,photo,gender,org_id,date_of_birth,email,remark,source_channel) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+		_, err = global.DB.Insert(sql, accountId, mobile, encrypt.Sha1Encode(password+smsCode), smsCode, enum.NORMAL,
+			utils.CurrentTime(), c.RealIP(), nickname, photo, gender, org.ID, dateOfBirth, email, remark, "org")
+		if err != nil {
+			global.Log.Error("AddAccount sql error：%s", err.Error())
+			return utils.Error(c, "保存失败，"+err.Error(), nil)
+		}
 	}
+
 	return utils.SuccessNull(c, "保存成功")
 }
 
